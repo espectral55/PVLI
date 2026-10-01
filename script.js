@@ -1,5 +1,5 @@
 function devuelveTextoDeAlerta() {
-  return "uooooo! Vaya alerta";
+  return "Hola :)";
 }
 
 function desaparece(nombre) {
