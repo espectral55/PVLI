@@ -1,3 +1,5 @@
+import TitleScene from "./titleScene.js";
+
 var config = {
 	type: Phaser.AUTO,
 	width: 800,
@@ -5,10 +7,7 @@ var config = {
 	scale: {
 		autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
 	},
-	scene: {
-		preload: preload,
-		create: create
-	}
+	scene: [{preload: preload, create: create}, TitleScene]
 };
 
 
@@ -18,16 +17,26 @@ var game = new Phaser.Game(config);
 function preload ()
 {
   this.load.image('sky', 'assets/sky.png');
+  this.load.image('playImage', 'assets/play.jpg');
+  this.load.image('player', 'assets/player.png');
 	
 }
 
 function create ()
 {
+	this.add.image(0, 0, 'sky').setOrigin(0, 0);
+	let button = this.add.image(this.sys.canvas.width /2, this.sys.canvas.height  /4, "playImage").setOrigin(0, 0);
+	button.setInteractive();
+
+	button.on("pointerup", ()=>{
+		this.scene.start("titleScene");
+	})
   //this.add.text(400,200, "It works!");
 	// Añadimos el fondo
-	this.add.image(0, 0, 'sky').setOrigin(0, 0);
+	
 }
 
+// CAMBIAR A INGLÉS
 function devuelveTextoDeAlerta() {
   return "Hola :)";
 }
