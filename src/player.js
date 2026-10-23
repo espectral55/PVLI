@@ -20,6 +20,22 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     preUpdate(t, dt) {
-
+        super.preUpdate(t, dt);
+        if(this.keys.a.isDown){    
+            this.x -= 10 * dt/100;
+            this.setFlipX(true);
+        }
+        else if (this.keys.d.isDown){
+            this.x += 10 * dt/100;
+            this.setFlipX(false);
+        }
+        else if (this.keys.w.isDown){
+            this.y -= 10 * dt/100;
+            this.setFlipY(true);
+        }
+        else if (this.keys.s.isDown){
+            this.y += 10 * dt/100;
+            this.setFlipY(false);
+        }
     }
 }
