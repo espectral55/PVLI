@@ -1,4 +1,4 @@
-import TitleScene from "./titleScene.js";
+import TitleScene from "./scenes/titleScene.js";
 
 var config = {
 	type: Phaser.AUTO,

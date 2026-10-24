@@ -10,6 +10,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.keys.s = this.scene.input.keyboard.addKey("S");
         this.keys.d = this.scene.input.keyboard.addKey("D");
         this.keys.w = this.scene.input.keyboard.addKey("W");
+
+        this.scene.input.on("pointerdown", (pointer)=>{
+            if (pointer.leftButtonDown()){
+                console.log("Coordenada X", pointer.worldX);
+                console.log("Coordenada Y", pointer.worldY);
+                console.log("Está pulsado:", pointer.isDown);
+            }
+        })
     }
 
     takeDamage(amount){
@@ -21,7 +29,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     preUpdate(t, dt) {
         super.preUpdate(t, dt);
-        if(this.keys.a.isDown){    
+        if(this.keys.a.isDown){
             this.x -= 10 * dt/100;
             this.setFlipX(true);
         }

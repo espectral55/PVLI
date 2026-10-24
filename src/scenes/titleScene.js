@@ -1,4 +1,4 @@
-import Player from "./player.js";
+import Player from "../player.js";
 
 export default class TitleScene extends Phaser.Scene{
     constructor() {
@@ -6,7 +6,7 @@ export default class TitleScene extends Phaser.Scene{
     }
 
     init(){
-        console.log("holi caroli")
+        
     }
 
     preload() {
