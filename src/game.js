@@ -13,6 +13,13 @@ var config = {
 	scale: {
 		autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
 	},
+	physics: {
+		default : 'arcade',
+		arcade: {
+			gravity : { y: 0},
+			debug: true
+		}
+	},
 	// La primera de la lista es la que arranca
 	scene: [BootScene, TitleScene, SettingsScene, CreditsScene, ParkScene, RoomScene]
 };

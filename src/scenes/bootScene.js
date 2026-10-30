@@ -32,6 +32,9 @@ preload(){
         this.load.image("plantShadows", "assets/CourseSelectMap/TX Shadow Plant.png");
         this.load.image("structures", "assets/CourseSelectMap/TX Struct.png");
         this.load.image("shopkeeper", "assets/CourseSelectMap/TX Player.png");
+
+        // Bala
+        this.load.image("bullet", "assets/blue_bullet.png")
 }
 
 create() {

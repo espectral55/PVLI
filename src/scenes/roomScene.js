@@ -25,6 +25,12 @@ export default class RoomScene extends Phaser.Scene {
         this.input.keyboard.on("keydown-K", () => {
             this.player.takeDamage(1);
         });
+
+        this.input.on("pointerdown", (pointer)=>{
+            if (pointer.leftButtonDown()){
+                this.player.shoot(pointer.worldX, pointer.worldY);
+            }
+        })
     }
 
     // Estrellas y "recuerdos" flotando en el fondo
