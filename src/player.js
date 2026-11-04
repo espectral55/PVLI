@@ -6,6 +6,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
 
         this.life = 5; //vida jugador
+        this.canMove = true; // false mientras hay un popup abierto
        
         this.keys = {}
         this.keys.a = this.scene.input.keyboard.addKey("A");
@@ -27,6 +28,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     preUpdate(t, dt) {
+        if (!this.canMove) return;
+        
         super.preUpdate(t, dt);
         if(this.keys.a.isDown){
             this.x -= 10 * dt/100;

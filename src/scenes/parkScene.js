@@ -1,4 +1,5 @@
 import Player from "../player.js";
+import Chan from "../chan.js";
 
 // Parque 
 export default class ParkScene extends Phaser.Scene {
@@ -55,7 +56,7 @@ export default class ParkScene extends Phaser.Scene {
             [473, 115], [590, 175], [635, 270], [590, 365], [473, 425],
             [327, 425], [210, 365], [165, 270], [210, 175], [327, 115]
         ];
-        for (let i = 0; i < positions.length; i++) {
+        /*for (let i = 0; i < positions.length; i++) {
             let x = positions[i][0];
             let y = positions[i][1];
             let person = this.add.sprite(x, y, "people", i).setScale(1.4);
@@ -66,7 +67,84 @@ export default class ParkScene extends Phaser.Scene {
             // Click en una persona- entra mente 
             person.setInteractive();
             person.on("pointerup", () => this.scene.start("room"));
+        }*/
+
+        this.chans = [];
+        for (let i = 0; i < positions.length; i++) {
+            this.chans.push(new Chan(this, positions[i][0], positions[i][1], i + 1));
         }
+    }
+
+    update() {
+        if (this.levelPopup || !this.player) return;   // con popup abierto no se comprueba nada
+
+        for (let chan of this.chans) {
+            let near = chan.isPlayerNear(this.player);
+  
+            if (near && !chan.playerWasNear) {
+                chan.playerWasNear = true;
+                this.openLevelPopup(chan);
+                return;
+            }
+            chan.playerWasNear = near;
+        }
+    }
+
+    openLevelPopup(chan) {
+        this.player.canMove = false;
+        let items = [];
+
+        // oscurece el parque
+        items.push(this.add.rectangle(400, 300, 800, 600, 0x000000, 0.6).setInteractive());
+
+        // imagen a pantalla completa
+        let img = this.add.image(800, 300, chan.levelKey).setOrigin(1, 0.5);
+        img.setScale(600 / img.height);
+        items.push(img);
+
+        // posición de un punto de la imagen original en pantalla
+        let s = img.scaleX;
+        let px = (x) => 800 - (img.width - x) * s;
+        let py = (y) => y * s;
+
+        // título y descripción 
+        items.push(this.add.text(25, 25, chan.titleBig, {
+            font: "bold 68px monospace", fill: "#ffffff", stroke: "#3b1030", strokeThickness: 6
+        }).setOrigin(0, 0));
+        items.push(this.add.text(235, 480, chan.title, {
+            font: "bold 28px monospace", fill: "#3b1030", align: "center", wordWrap: { width: 220 }
+        }).setOrigin(0.5));
+        items.push(this.add.text(215, 520, chan.description, {
+            font: "15px monospace", fill: "#3b1030", align: "center", wordWrap: { width: 280 }
+        }).setOrigin(0.5));
+
+        // botones dentro de los círculos
+        items.push(this.makePopupButton(px(1322), py(642), 10, "JUGAR", () => {
+            this.closeLevelPopup();
+            this.scene.start("room", { levelId: chan.levelId });
+        }));
+        items.push(this.makePopupButton(px(1250), py(793), -28, "IGNORAR", () => this.closeLevelPopup()));
+
+        items.forEach(o => o.setDepth(1000));
+        this.levelPopup = items;
+    }
+
+    // botón de texto con el ángulo del círculo donde va
+    makePopupButton(x, y, angle, label, onClick) {
+        let btn = this.add.text(x, y, label, { font: "bold 17px monospace", fill: "#000000" })
+            .setOrigin(0.5).setAngle(angle).setPadding(6, 6)
+            .setInteractive({ useHandCursor: true });
+        btn.on("pointerover", () => btn.setColor("#c2185b"));
+        btn.on("pointerout", () => btn.setColor("#000000"));
+        btn.on("pointerup", onClick);
+        return btn;
+    }
+
+    closeLevelPopup() {
+        if (!this.levelPopup) return;
+        this.levelPopup.forEach(o => o.destroy());
+        this.levelPopup = null;
+        this.player.canMove = true;
     }
 
     // Puesto de la tienda abajo a la izquierda

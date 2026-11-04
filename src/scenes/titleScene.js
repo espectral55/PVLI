@@ -9,15 +9,19 @@ export default class TitleScene extends Phaser.Scene{
         this.cameras.main.setBackgroundColor("#fdfafb");
 
         // Fondo
-        this.add.image(400, 300, "baseBackground").setDisplaySize(800, 533);
+        //this.add.image(400, 300, ).setDisplaySize(900, 633);
+
+        let bg = this.add.image(800, 300, "titleImage").setOrigin(1, 0.5);
+        bg.setScale(600 / bg.height);
+
+
 
         // Título
         this.add.text(60, 60, "IDENTITY", { font: "bold 64px monospace", fill: "#3a2a33" });
         this.add.text(64, 132, "(título pendiente de cambio)", { font: "bold 14px monospace", fill: "#9a7f8c" });
 
         // Protagonista 
-        this.add.image(620, 330, "effects", 5).setScale(4.5).setAlpha(0.45);
-        this.add.sprite(620, 330, "player", 1).setScale(6).play("player_down");
+        //this.add.sprite(620, 330, "player", 1).setScale(6).play("player_down");
 
         // Botones, cada uno lleva a una escena
         this.createButton(190, 230, "Continuar", "park");

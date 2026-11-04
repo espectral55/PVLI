@@ -8,6 +8,7 @@ export default class BootScene extends Phaser.Scene{
 preload(){
          // Imagen entera
         this.load.image("baseBackground", "assets/Base.png");
+        this.load.image("titleImage", "assets/Level5.png");
 
         // Hojas de sprites: imagen partida en cuadrados iguales (frames)
         this.load.spritesheet("player", "assets/MainCharacterPlaceholder.png", { frameWidth: 32, frameHeight: 32 });
@@ -33,8 +34,14 @@ preload(){
         this.load.image("structures", "assets/CourseSelectMap/TX Struct.png");
         this.load.image("shopkeeper", "assets/CourseSelectMap/TX Player.png");
 
+
+        for (let i = 1; i <= 10; i++) {
+            this.load.image("level" + i, "assets/Level" + i + ".png");
+        }
+
+
         // Bala
-        this.load.image("bullet", "assets/blue_bullet.png")
+        this.load.image("bullet", "assets/blue_bullet.png");
 }
 
 create() {
