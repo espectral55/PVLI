@@ -1,10 +1,11 @@
 import Bullet from "./bullet.js";
 
-export default class Player extends Phaser.GameObjects.Sprite {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, "player", 0);
         this.scene.add.existing(this);
-
+        this.scene.physics.add.existing(this)
+        this.body.setSize(7, 7, true);
         this.life = 5; //vida jugador
         this.canMove = true; // false mientras hay un popup abierto
        
@@ -17,10 +18,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     shoot(targetX, targetY){
-        new Bullet(this.scene, this.x, this.y, targetX, targetY);
+        const bullet = new Bullet(this.scene, this.x, this.y);
+        if (this.scene.playerBullets){
+            this.scene.playerBullets.add(bullet);
+            bullet.fire(targetX, targetY, 600);
+        }
     }
 
-    takeDamage(amount){
+    takeDamage(amount = 1){
         this.life -= amount;
         if (this.life < 0){
             this.life = 0;
@@ -41,11 +46,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
         }
         if (this.keys.w.isDown){
             this.y -= 10 * dt/100;
-            this.setFlipY(true);
         }
         else if (this.keys.s.isDown){
             this.y += 10 * dt/100;
-            this.setFlipY(false);
         }
     }
 }

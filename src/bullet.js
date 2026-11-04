@@ -1,13 +1,16 @@
-export default class Bullet extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, targetX, targetY){
+export default class Bullet extends Phaser.Physics.Arcade.Sprite{
+    constructor(scene, x, y){
         super(scene, x, y, 'bullet');
 
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.setScale(0.2);
-        let angle = Phaser.Math.Angle.Between(x, y, targetX, targetY);
+        
+    }
+
+    fire(targetX, targetY, speed = 600){
+        let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY);
         this.setRotation(angle);
-        let speed = 600;
         this.scene.physics.velocityFromRotation(angle, speed, this.body.velocity);
     }
 

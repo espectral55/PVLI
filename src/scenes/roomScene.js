@@ -1,4 +1,6 @@
 import Player from "../player.js";
+import Bullet from "../bullet.js";
+import Enemy from "../enemy.js";
 
 // Sala dentro de la mente de una persona 
 export default class RoomScene extends Phaser.Scene {
@@ -31,6 +33,56 @@ export default class RoomScene extends Phaser.Scene {
                 this.player.shoot(pointer.worldX, pointer.worldY);
             }
         })
+
+         // Colisiones
+        this.playerBullets = this.physics.add.group({
+            classType: Bullet,
+            runChildUpdate: true
+        })
+
+        this.enemies = this.physics.add.group({
+            classType: Enemy,
+            runChildUpdate: true
+
+        })
+
+        this.enemyBullets = this.physics.add.group({
+            classType: Bullet,
+            runChildUpdate: true
+        })
+
+        this.physics.add.overlap(
+            this.playerBullets,
+            this.enemies,
+            this.handleBulletEnemyCollision,
+            null,
+            this
+        )
+
+        this.physics.add.overlap(
+            this.enemyBullets,
+            this.player,
+            this.handleBulletPlayerCollision,
+            null,
+            this
+        )
+
+        this.enemy = new Enemy(this, 570, 230).setScale(2).play("paranoid_idle");
+        this.enemies.add(this.enemy);
+
+    }
+
+    handleBulletPlayerCollision(player, bullet){
+        bullet.destroy();
+        player.takeDamage(1);
+    }
+
+    handleBulletEnemyCollision(bullet, enemy){
+        console.log("Impacto detectado entre enemy y bullet");
+        if (enemy.takeDamage){
+            enemy.takeDamage(1);
+        }
+        bullet.destroy();
     }
 
     // Estrellas y "recuerdos" flotando en el fondo
@@ -79,7 +131,7 @@ export default class RoomScene extends Phaser.Scene {
 
     // enemigos con baras de vida
     createEnemies() {
-        this.add.sprite(570, 230, "paranoid", 1).setScale(2).play("paranoid_idle");
+        //this.add.sprite(570, 230, "paranoid", 1).setScale(2).play("paranoid_idle");
         this.add.image(570, 188, "healthBars", 74).setScale(2);
 
         this.add.sprite(570, 350, "martyr", 1).setScale(2).play("martyr_idle");
