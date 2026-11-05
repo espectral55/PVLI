@@ -8,7 +8,7 @@ export default class BootScene extends Phaser.Scene{
 preload(){
          // Imagen entera
         this.load.image("baseBackground", "assets/Base.png");
-        this.load.image("titleImage", "assets/Level5.png");
+        this.load.image("titleImage", "assets/titlescreen.png");
 
         // Hojas de sprites: imagen partida en cuadrados iguales (frames)
         this.load.spritesheet("player", "assets/MainCharacterPlaceholder.png", { frameWidth: 32, frameHeight: 32 });
