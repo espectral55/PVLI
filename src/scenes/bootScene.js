@@ -10,8 +10,8 @@ preload(){
         this.load.image("baseBackground", "assets/Base.png");
         this.load.image("titleImage", "assets/titlescreen.png");
 
-        // Hojas de sprites: imagen partida en cuadrados iguales (frames)
-        this.load.spritesheet("player", "assets/MainCharacterPlaceholder.png", { frameWidth: 32, frameHeight: 32 });
+        // imagen partida en cuadrados iguales (frames)
+        this.load.spritesheet("player", "assets/MainCharacterAnim.png", { frameWidth: 32, frameHeight: 42 });
         this.load.spritesheet("people", "assets/CharactersLevelSelect.png", { frameWidth: 31, frameHeight: 42 });
         this.load.spritesheet("paranoid", "assets/Enemies/pipo-nekonin027.png", { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet("martyr", "assets/Enemies/pipo-nekonin019.png", { frameWidth: 32, frameHeight: 32 });
@@ -84,7 +84,7 @@ createFrames() {
         this.textures.get("grass").add("grassTile", 0, 0, 0, 32, 32);
         this.textures.get("structures").add("arch", 0, 407, 26, 82, 66);
         this.textures.get("shopkeeper").add("shopkeeper", 0, 6, 14, 21, 44);
-        this.textures.get("player").add("face", 0, 38, 2, 20, 18);      // cabeza para el retrato del HUD
+        this.textures.get("player").add("face", 0, 8, 6, 18, 18);
         this.textures.get("dungeon").add("sword", 0, 192, 32, 16, 32);  // icono del arma
         this.textures.get("dungeon").add("swordBlue", 0, 208, 0, 16, 32); // icono de la escopeta (tienda)
         this.textures.get("stoneGround").add("stoneTile", 0, 0, 0, 96, 96); // losa del suelo (casa)
@@ -101,6 +101,26 @@ createFrames() {
             frameRate: 6,
             repeat: -1
         });
+        
+        this.anims.create({
+            key: "player_up",
+            frames: this.anims.generateFrameNumbers("player", { start: 3, end: 5 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "player_left",
+            frames: this.anims.generateFrameNumbers("player", { start: 6, end: 8 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "player_right",
+            frames: this.anims.generateFrameNumbers("player", { start: 9, end: 11 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        
 
         // Los 3 enemigos tienen la misma animación para cada uno
         let enemies = ["paranoid", "martyr", "aggressor"];
