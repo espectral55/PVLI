@@ -1,5 +1,4 @@
 import Bullet from "./bullet.js";
-import Player from "./player.js";
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y){
@@ -9,6 +8,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.life = 5; // Vida del enemigo
         this.cooldown = 3000; // Tiempo entre balas (3 segs)
+        this.isMoving = false;
     }
 
     takeDamage(amount){
@@ -17,7 +17,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.life = 0;
             this.destroy();
         }
-        console.log("enemigo golpeado: " + this.life)
     }
 
     shoot(targetX, targetY){
@@ -28,11 +27,27 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    move(targetX, targetY, speed = 100){
+        let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY);
+        this.scene.physics.velocityFromRotation(angle, speed, this.body.velocity);
+    }
+
     preUpdate(t, dt){
         super.preUpdate(t, dt);
         if (this.scene.player){
             let playerX = this.scene.player.x;
             let playerY = this.scene.player.y;
+            let distance = Phaser.Math.Distance.Between(this.x, this.y, playerX, playerY);
+            if (distance > 250 && distance < 600){
+                this.isMoving = true;
+                this.move(playerX, playerY);
+               // this.setFlip(playerX < this.x);
+            }
+            else {
+                this.setVelocity(0, 0);
+                this.isMoving = false;
+            }
+
             if (this.cooldown <= 0){
                 this.cooldown = 3000;
                 this.shoot(playerX, playerY);
@@ -40,6 +55,8 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.cooldown -= dt;
 
         }
+
+
         
     }
 }

@@ -78,7 +78,6 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     handleBulletEnemyCollision(bullet, enemy){
-        console.log("Impacto detectado entre enemy y bullet");
         if (enemy.takeDamage){
             enemy.takeDamage(1);
         }
