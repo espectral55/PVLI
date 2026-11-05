@@ -24,8 +24,8 @@ export default class TitleScene extends Phaser.Scene{
         //this.add.sprite(620, 330, "player", 1).setScale(6).play("player_down");
 
         // Botones, cada uno lleva a una escena
-        this.createButton(190, 230, "Continuar", "park");
-        this.createButton(190, 290, "Nueva partida", "park");
+        this.createButton(190, 230, "Continuar", "house");
+        this.createButton(190, 290, "Nueva partida", "house");
         this.createButton(190, 350, "Ajustes", "settings");
         this.createButton(190, 410, "Créditos", "credits");
     }

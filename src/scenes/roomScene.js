@@ -8,6 +8,12 @@ export default class RoomScene extends Phaser.Scene {
         super({ key: "room" });
     }
 
+    // Recibe el nivel desde el parque
+    //  this.scene.start("room", { levelId: ... })
+    init(data) {
+        this.levelId = data.levelId || 1;
+    }
+
     create() {
         this.cameras.main.setBackgroundColor("#0d0b14");   // fondo oscuro de la mente
 
@@ -26,6 +32,17 @@ export default class RoomScene extends Phaser.Scene {
         // Prueba, K quita 1 de vida
         this.input.keyboard.on("keydown-K", () => {
             this.player.takeDamage(1);
+        });
+        
+        // Prueba, C sala completada ,pantalla  victoria
+        this.input.keyboard.on("keydown-C", () => {
+            this.scene.start("result", { win: true, levelId: this.levelId });
+        });
+
+        // ESC pausa, se congela la sala y se abre el menú de pausa encima
+        this.input.keyboard.on("keydown-ESC", () => {
+            this.scene.pause();
+            this.scene.launch("pause");
         });
 
         this.input.on("pointerdown", (pointer)=>{
@@ -84,7 +101,7 @@ export default class RoomScene extends Phaser.Scene {
         bullet.destroy();
     }
 
-    // Estrellas y "recuerdos" flotando en el fondo
+    // Estrellas  flotando en el fondo
     createBackground() {
         for (let i = 0; i < 90; i++) {
             let x = Phaser.Math.Between(0, 800);
@@ -193,5 +210,10 @@ export default class RoomScene extends Phaser.Scene {
         // Cada frame copiamos la vida del jugador al HUD
         this.lifeText.setText("VIDA: " + this.player.life);
         this.lifeBar.setFrame(5 - this.player.life);
+
+        // Sin vida, pantalla  Gameover
+        if (this.player.life === 0) {
+            this.scene.start("result", { win: false, levelId: this.levelId });
+        }
     }
 }

@@ -41,7 +41,9 @@ export default class ParkScene extends Phaser.Scene {
         this.createShop();
 
         // Arco para volver a casa
-        this.add.image(705, 520, "structures", "arch").setScale(1.3);
+        let arch = this.add.image(705, 520, "structures", "arch").setScale(1.3);
+        arch.setInteractive();
+        arch.on("pointerup", () => this.scene.start("house"));
         this.add.text(705, 470, "CASA", { font: "bold 14px monospace", fill: "#ffffff", backgroundColor: "#3b322c", padding: { x: 6, y: 2 } }).setOrigin(0.5);
 
         // Jugador
@@ -151,7 +153,9 @@ export default class ParkScene extends Phaser.Scene {
     createShop() {
         this.add.image(45, 520, "parkProps", "crate").setScale(1.5);
         this.add.image(150, 540, "parkProps", "chest").setScale(1.5);
-        this.add.image(100, 530, "shopkeeper", "shopkeeper").setScale(1.5);
+        let keeper = this.add.image(100, 530, "shopkeeper", "shopkeeper").setScale(1.5);
+        keeper.setInteractive();
+        keeper.on("pointerup", () => this.scene.start("shop"));   // click en el tendero → tienda
         this.add.image(100, 455, "parkProps", "sign").setScale(1.5);
         this.add.text(100, 420, "TIENDA", { font: "bold 14px monospace", fill: "#ffffff", backgroundColor: "#6b4a33", padding: { x: 6, y: 2 } }).setOrigin(0.5);
     }

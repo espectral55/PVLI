@@ -34,6 +34,10 @@ preload(){
         this.load.image("structures", "assets/CourseSelectMap/TX Struct.png");
         this.load.image("shopkeeper", "assets/CourseSelectMap/TX Player.png");
 
+        // Casa
+        this.load.image("stoneGround", "assets/CourseSelectMap/TX Tileset Stone Ground.png");
+        this.load.image("walls", "assets/CourseSelectMap/TX Tileset Wall.png");
+
 
         for (let i = 1; i <= 10; i++) {
             this.load.image("level" + i, "assets/Level" + i + ".png");
@@ -60,6 +64,9 @@ createFrames() {
         props.add("sign", 0, 98, 159, 29, 34);
         props.add("crate", 0, 159, 17, 34, 48);
         props.add("chest", 0, 95, 29, 34, 33);
+        props.add("door", 0, 26, 102, 43, 52);     
+        props.add("barrel", 0, 161, 152, 30, 38);  
+        props.add("vase", 0, 164, 216, 23, 36);    
 
         const shadows = this.textures.get("shadows");
         shadows.add("bench", 0, 294, 35, 62, 26);
@@ -79,6 +86,9 @@ createFrames() {
         this.textures.get("shopkeeper").add("shopkeeper", 0, 6, 14, 21, 44);
         this.textures.get("player").add("face", 0, 38, 2, 20, 18);      // cabeza para el retrato del HUD
         this.textures.get("dungeon").add("sword", 0, 192, 32, 16, 32);  // icono del arma
+        this.textures.get("dungeon").add("swordBlue", 0, 208, 0, 16, 32); // icono de la escopeta (tienda)
+        this.textures.get("stoneGround").add("stoneTile", 0, 0, 0, 96, 96); // losa del suelo (casa)
+        this.textures.get("walls").add("wallStrip", 0, 32, 192, 128, 64);   // tira de pared (casa)
     }
 
 
