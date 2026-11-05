@@ -6,16 +6,48 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
 
-        this.life = 5; // Vida del enemigo
-        this.cooldown = 3000; // Tiempo entre balas (3 segs)
+        this.maxLife = 5;
+        this.life = this.maxLife;
+        this.cooldown = 3000;
         this.isMoving = false;
+
+        // Fila 10 Verde Grande: Frame 82 = 5 bolitas verdes (vida al máximo)
+        this.healthBar = this.scene.add.sprite(this.x, this.y - 20, "HealthBars", 82);
+        this.healthBar.setDepth(10);
+        
+        this.updateHealthBar();
+    }
+
+    updateHealthBar(){
+        if (!this.healthBar || !this.healthBar.active) return;
+
+        // Posicionar sobre el enemigo
+        this.healthBar.setPosition(this.x, this.y - this.height / 2 - 10);
+        
+        // Fila Verde Grande (5 bolitas):
+        // Frame 82: 5/5 bolitas (llena)
+        // Frame 83: 4/5 bolitas
+        // Frame 84: 3/5 bolitas
+        // Frame 85: 2/5 bolitas
+        // Frame 86: 1/5 bolita
+        // Frame 87: 0/5 bolitas (vacía)
+        let damageIndex = this.maxLife - this.life;
+        let targetFrame = 82 + Phaser.Math.Clamp(damageIndex, 0, 5);
+
+        this.healthBar.setFrame(targetFrame);
     }
 
     takeDamage(amount){
         this.life -= amount;
-        if (this.life < 0){
+
+        if (this.life <= 0){
             this.life = 0;
+            if (this.healthBar) {
+                this.healthBar.destroy();
+            }
             this.destroy();
+        } else {
+            this.updateHealthBar();
         }
     }
 
@@ -34,6 +66,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     preUpdate(t, dt){
         super.preUpdate(t, dt);
+
+        this.updateHealthBar();
+
         if (this.scene.player){
             let playerX = this.scene.player.x;
             let playerY = this.scene.player.y;
@@ -41,7 +76,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             if (distance > 250 && distance < 600){
                 this.isMoving = true;
                 this.move(playerX, playerY);
-               // this.setFlip(playerX < this.x);
             }
             else {
                 this.setVelocity(0, 0);
@@ -53,10 +87,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                 this.shoot(playerX, playerY);
             }
             this.cooldown -= dt;
-
         }
-
-
-        
     }
 }

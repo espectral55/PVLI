@@ -17,13 +17,13 @@ export default class SettingsScene extends Phaser.Scene {
         // menos, barra, más 
         this.add.text(170, 198, "Música", style);
         this.add.image(330, 210, "icons", 18).setScale(3);
-        this.add.image(460, 210, "auraBars", 25).setScale(4.5);   // barra rosa
+        this.add.image(460, 210, "auraBars", 41).setScale(4.5);   // barra rosa
         this.add.image(590, 210, "icons", 8).setScale(3);
 
         // Efectos
         this.add.text(170, 278, "Efectos", style);
         this.add.image(330, 290, "icons", 18).setScale(3);
-        this.add.image(460, 290, "auraBars", 5).setScale(4.5);    // barra azul
+        this.add.image(460, 290, "auraBars", 9).setScale(4.5);    // barra azul
         this.add.image(590, 290, "icons", 8).setScale(3);
 
         // Pantalla completa

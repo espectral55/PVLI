@@ -22,7 +22,7 @@ preload(){
         this.load.spritesheet("dungeon", "assets/LevelTileset/0x72_16x16DungeonTileset.v5.png", { frameWidth: 16, frameHeight: 16 });
 
         // HealthBars.png se carga 2 veces porque tiene barras de 2 tamaños
-        this.load.spritesheet("healthBars", "assets/HealthBars.png", { frameWidth: 32, frameHeight: 16 });
+        this.load.spritesheet("HealthBars", "assets/HealthBars.png", { frameWidth: 32, frameHeight: 16 });
         this.load.spritesheet("auraBars", "assets/HealthBars.png", { frameWidth: 48, frameHeight: 16 });
 
         // Parque
