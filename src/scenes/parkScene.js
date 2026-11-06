@@ -71,9 +71,12 @@ export default class ParkScene extends Phaser.Scene {
             person.on("pointerup", () => this.scene.start("room"));
         }*/
 
+        let done = this.registry.get("completedLevels") || [];
         this.chans = [];
         for (let i = 0; i < positions.length; i++) {
-            this.chans.push(new Chan(this, positions[i][0], positions[i][1], i + 1));
+            if (!done.includes(i+1)) {
+                this.chans.push(new Chan(this, positions[i][0], positions[i][1], i + 1));
+            }
         }
     }
 
@@ -168,6 +171,9 @@ export default class ParkScene extends Phaser.Scene {
         this.add.text(52, 30, "Almas: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
 
         this.add.nineslice(715, 30, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
-        this.add.text(715, 30, "Mentes 0/10", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0.5);
+        //this.add.text(715, 30, "Mentes 0/10", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0.5);
+
+        let done = this.registry.get("completedLevels") || [];
+        this.add.text(715, 30, "Mentes " + done.length + "/10", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0.5);
     }
 }

@@ -11,6 +11,15 @@ export default class ResultScene extends Phaser.Scene {
     init(data) {
         this.win = data.win || false;
         this.levelId = data.levelId || 1;
+
+        // guardamos el nivel completado en el registro para que el parque lo sepa. el resgistry es como un almacén global que comparten las escenas
+        if (this.win) {
+            let done = this.registry.get("completedLevels") || [];
+            if (!done.includes(this.levelId)) {
+                done.push(this.levelId);
+                this.registry.set("completedLevels", done);
+            }   
+        }
     }
 
     create() {

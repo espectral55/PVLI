@@ -40,8 +40,14 @@ preload(){
 
 
         for (let i = 1; i <= 10; i++) {
+            // imagenes de los niveles
             this.load.image("level" + i, "assets/Level" + i + ".png");
+            // imagenes de las memorias
+            this.load.image("memory" + i, "assets/Memories/memory" + i + ".png");
         }
+
+        
+
 
 
         // Bala

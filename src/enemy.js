@@ -8,7 +8,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.maxLife = 5;
         this.life = this.maxLife;
-        this.cooldown = 3000;
+
+        // ms entre disparos. con las variantes podemos cambiarlo
+        this.baseCooldown = 3000;   
+        this.cooldown = this.baseCooldown;
+        this.canMove = true;
         this.isMoving = false;
 
         // Fila 10 Verde Grande: Frame 82 = 5 bolitas verdes (vida al máximo)
@@ -73,7 +77,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             let playerX = this.scene.player.x;
             let playerY = this.scene.player.y;
             let distance = Phaser.Math.Distance.Between(this.x, this.y, playerX, playerY);
-            if (distance > 250 && distance < 600){
+            if (this.canMove && distance > 250 && distance < 600){
                 this.isMoving = true;
                 this.move(playerX, playerY);
             }
@@ -83,7 +87,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             }
 
             if (this.cooldown <= 0){
-                this.cooldown = 3000;
+                this.cooldown = this.baseCooldown;
                 this.shoot(playerX, playerY);
             }
             this.cooldown -= dt;

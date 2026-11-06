@@ -27,4 +27,6 @@ export default class Chan extends Phaser.GameObjects.Sprite {
     isPlayerNear(player) {
         return Phaser.Math.Distance.Between(this.x, this.y, player.x, player.y) < this.triggerRadius;
     }
+
+
 }

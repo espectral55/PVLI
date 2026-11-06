@@ -4,6 +4,7 @@ import SettingsScene from "./scenes/settingsScene.js";
 import CreditsScene from "./scenes/creditsScene.js";
 import ParkScene from "./scenes/parkScene.js";
 import RoomScene from "./scenes/roomScene.js";
+import BonusScene from "./scenes/bonusScene.js";
 import HouseScene from "./scenes/houseScene.js";
 import ShopScene from "./scenes/shopScene.js";
 import PauseScene from "./scenes/pauseScene.js";
@@ -21,11 +22,11 @@ var config = {
 		default : 'arcade',
 		arcade: {
 			gravity : { y: 0},
-			debug: true
+			debug: false
 		}
 	},
 	// La primera de la lista es la que arranca
-	scene: [BootScene, TitleScene, SettingsScene, CreditsScene, ParkScene, RoomScene, HouseScene, ShopScene, PauseScene, ResultScene]
+	scene: [BootScene, TitleScene, SettingsScene, CreditsScene, ParkScene, RoomScene, BonusScene, HouseScene, ShopScene, PauseScene, ResultScene]
 };
 
 var game = new Phaser.Game(config);

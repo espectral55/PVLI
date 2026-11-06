@@ -1,6 +1,7 @@
 import Player from "../player.js";
 import Bullet from "../bullet.js";
 import Enemy from "../enemy.js";
+import StaticEnemy from "../staticEnemy.js";
 
 // Sala dentro de la mente de una persona 
 export default class RoomScene extends Phaser.Scene {
@@ -12,6 +13,7 @@ export default class RoomScene extends Phaser.Scene {
     //  this.scene.start("room", { levelId: ... })
     init(data) {
         this.levelId = data.levelId || 1;
+        this.cleared = false;
     }
 
     create() {
@@ -25,8 +27,8 @@ export default class RoomScene extends Phaser.Scene {
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
         this.player = new Player(this, 240, 350).setScale(2);
 
-        this.createEnemies();
-        this.createBullets();
+        //this.createEnemies();
+        //this.createBullets();
         this.createHUD();
 
         // Prueba, K quita 1 de vida
@@ -87,6 +89,13 @@ export default class RoomScene extends Phaser.Scene {
         this.enemy = new Enemy(this, 570, 230).setScale(2).play("paranoid_idle");
         this.enemies.add(this.enemy);
 
+        this.enemy = new Enemy(this, 570, 430).setScale(2).play("martyr_idle");
+        this.enemies.add(this.enemy);
+
+        this.enemy = new StaticEnemy(this, 570, 330).setScale(2).play("paranoid_idle");
+        this.enemies.add(this.enemy);
+
+
     }
 
     handleBulletPlayerCollision(player, bullet){
@@ -139,10 +148,20 @@ export default class RoomScene extends Phaser.Scene {
         this.add.rectangle(75, 316, 150, 6, 0x4a3222);   // barandillas
         this.add.rectangle(75, 384, 150, 6, 0x4a3222);
 
-        this.add.rectangle(725, 350, 150, 64, 0x8a6244).setAlpha(0.35);
-        this.add.rectangle(725, 316, 150, 6, 0x4a3222).setAlpha(0.35);
-        this.add.rectangle(725, 384, 150, 6, 0x4a3222).setAlpha(0.35);
-        this.add.image(725, 350, "icons", 16).setScale(2.5);   // X = bloqueado
+        // guardamoas puente a desbloqear
+        this.rightBridge = [
+            this.add.rectangle(725, 350, 150, 64, 0x8a6244).setAlpha(0.35),
+            this.add.rectangle(725, 316, 150, 6, 0x4a3222).setAlpha(0.35),
+            this.add.rectangle(725, 384, 150, 6, 0x4a3222).setAlpha(0.35)
+        ];
+        this.blockedIcon = this.add.image(725, 350, "icons", 16).setScale(2.5);  
+    }
+
+    unlockBridge() {
+        this.cleared = true;
+        this.rightBridge.forEach(piece => piece.setAlpha(1));
+        //this.rightBridge[0].setFillStyle(0xd9b38c);   // color más claro
+        this.blockedIcon.destroy();
     }
 
     // enemigos con baras de vida
@@ -203,6 +222,17 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     update() {
+        // WIP de desbloqueo de caminosss
+        if (!this.cleared && this.enemies.countActive(true) === 0) {
+            this.unlockBridge();
+        }
+
+        // altura del puente hardcodeada por ahora oofff
+        if (this.cleared && this.player.x > 700 && Math.abs(this.player.y - 350) < 32) {
+            this.scene.start("bonus", { levelId: this.levelId });
+            return;
+        }
+
         // El aura sigue al jugador
         this.aura.x = this.player.x;
         this.aura.y = this.player.y;
