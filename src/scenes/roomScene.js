@@ -148,13 +148,13 @@ export default class RoomScene extends Phaser.Scene {
     // enemigos con baras de vida
     createEnemies() {
         //this.add.sprite(570, 230, "paranoid", 1).setScale(2).play("paranoid_idle");
-        this.add.image(570, 188, "healthBars", 74).setScale(2);
+       // this.add.image(570, 188, "healthBars", 74).setScale(2);
 
         this.add.sprite(570, 350, "martyr", 1).setScale(2).play("martyr_idle");
-        this.add.image(570, 308, "healthBars", 76).setScale(2);
+        //this.add.image(570, 308, "healthBars", 76).setScale(2);
 
         this.add.sprite(570, 470, "aggressor", 1).setScale(2).play("aggressor_idle");
-        this.add.image(570, 428, "healthBars", 74).setScale(2);
+        //this.add.image(570, 428, "healthBars", 74).setScale(2);
     }
 
     // Balas random de ejemplpo
@@ -186,7 +186,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Vida texto + barra de 5 rayas 
         this.lifeText = this.add.text(104, 84, "VIDA: " + this.player.life, { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
-        this.lifeBar = this.add.image(190, 84, "healthBars", 0).setScale(3).setOrigin(0, 0.5);
+        this.lifeBar = this.add.image(190, 84, "HealthBars", 0).setScale(3).setOrigin(0, 0.5);
 
         // Sala actual
         this.add.text(14, 110, "SALA 1/3", { font: "bold 16px monospace", fill: "#f3e9e4", backgroundColor: "#000000aa", padding: { x: 6, y: 3 } });
