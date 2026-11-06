@@ -86,7 +86,7 @@ export default class RoomScene extends Phaser.Scene {
             this
         )
 
-        this.enemy = new Enemy(this, 570, 230).setScale(2).play("paranoid_idle");
+        this.enemy = new Enemy(this, 570, 230).setScale(2).play("aggressor_idle");
         this.enemies.add(this.enemy);
 
         this.enemy = new Enemy(this, 570, 430).setScale(2).play("martyr_idle");
