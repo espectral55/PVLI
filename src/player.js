@@ -8,7 +8,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, "player", IDLE.down);
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this)
-        this.body.setSize(7, 7, true);
+        this.body.setSize(7, 15, true);
         this.life = 5; //vida jugador
         this.canMove = true; // false mientras hay un popup abierto
        

@@ -16,12 +16,14 @@ export default class RoomScene extends Phaser.Scene {
         this.cleared = false;
     }
 
+
     create() {
         this.cameras.main.setBackgroundColor("#0d0b14");   // fondo oscuro de la mente
 
         this.createBackground();
-        this.createIsland();
-        this.createBridges();
+        this.createMap();
+        //this.createIsland();
+        //this.createBridges();
 
         // Jugador con el aura alrededor
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
@@ -95,6 +97,20 @@ export default class RoomScene extends Phaser.Scene {
         this.enemy = new StaticEnemy(this, 570, 330).setScale(2).play("paranoid_idle");
         this.enemies.add(this.enemy);
 
+        this.physics.add.collider(this.player, this.wallsLayer);
+        this.physics.add.collider(this.player, this.columnLayer);
+        this.physics.add.collider(this.player, this.leftBridgeLayer);
+        this.rightBridgeCol = this.physics.add.collider(this.player, this.rightBridgeLayer);
+
+        this.physics.add.collider(this.enemies, this.wallsLayer);
+        this.physics.add.collider(this.enemies, this.columnLayer);
+        this.physics.add.collider(this.enemies, this.leftBridgeLayer);
+        this.physics.add.collider(this.enemies, this.rightBridgeLayer);
+
+
+        //this.physics.add.collider(this.playerBullets, this.wallsLayer);
+        //this.physics.add.collider(this.enemyBullets, this.wallsLayer);
+
 
     }
 
@@ -108,6 +124,30 @@ export default class RoomScene extends Phaser.Scene {
             enemy.takeDamage(1);
         }
         bullet.destroy();
+    }
+
+    createMap(){
+        const map = this.make.tilemap({key: 'nivel'});
+        const tileset = map.addTilesetImage('nivelTileset', 'dungeon');
+
+        this.groundLayer = map.createLayer('Ground', tileset);
+        this.wallsLayer = map.createLayer('Walls', tileset);
+        this.columnLayer = map.createLayer('Column', tileset);
+        this.leftBridgeLayer = map.createLayer('LeftBridge', tileset);
+        this.rightBridgeLayer = map.createLayer('RightBridge', tileset).setAlpha(0.35);
+
+        this.blockedIcon = this.add.image(725, 350, "icons", 16).setScale(2.5);  
+
+        const layers = [this.leftBridgeLayer, this.rightBridgeLayer, this.groundLayer, this.wallsLayer, this.columnLayer];
+        layers.forEach(layer =>{
+            layer.setScale(2);
+            layer.setPosition(0, 110);
+        })
+
+        this.wallsLayer.setCollisionByExclusion([-1]);
+        this.leftBridgeLayer.setCollisionByExclusion([-1]);
+        this.rightBridgeLayer.setCollisionByExclusion([-1]);
+        this.columnLayer.setCollisionByExclusion([-1]);
     }
 
     // Estrellas  flotando en el fondo
@@ -124,7 +164,7 @@ export default class RoomScene extends Phaser.Scene {
         this.add.image(735, 520, "dungeon", 197).setScale(3).setAlpha(0.35).setAngle(-10);
     }
 
-    // Isla
+    // (Ya no se usa) Isla
     //  grosor, suelo, pared, borde y antorchas
     createIsland() {
         this.add.rectangle(400, 570, 500, 24, 0x3a2838);   // grosor de la isla
@@ -144,22 +184,24 @@ export default class RoomScene extends Phaser.Scene {
 
     // Puente desbloqueado (izquierda) y bloqueado (derecha, transparente y con una X)
     createBridges() {
-        this.add.rectangle(75, 350, 150, 64, 0x8a6244);
-        this.add.rectangle(75, 316, 150, 6, 0x4a3222);   // barandillas
-        this.add.rectangle(75, 384, 150, 6, 0x4a3222);
+        this.add.rectangle(75, 360, 170, 64, 0x8a6244);
+        this.add.rectangle(75, 326, 170, 6, 0x4a3222);   // barandillas
+        this.add.rectangle(75, 394, 170, 6, 0x4a3222);
+        this.add.rectangle()
 
         // guardamoas puente a desbloqear
         this.rightBridge = [
-            this.add.rectangle(725, 350, 150, 64, 0x8a6244).setAlpha(0.35),
-            this.add.rectangle(725, 316, 150, 6, 0x4a3222).setAlpha(0.35),
-            this.add.rectangle(725, 384, 150, 6, 0x4a3222).setAlpha(0.35)
+            this.add.rectangle(725, 360, 170, 64, 0x8a6244).setAlpha(0.35),
+            this.add.rectangle(725, 326, 170, 6, 0x4a3222).setAlpha(0.35),
+            this.add.rectangle(725, 394, 170, 6, 0x4a3222).setAlpha(0.35)
         ];
-        this.blockedIcon = this.add.image(725, 350, "icons", 16).setScale(2.5);  
     }
 
     unlockBridge() {
         this.cleared = true;
-        this.rightBridge.forEach(piece => piece.setAlpha(1));
+        this.rightBridgeLayer.setAlpha(1);
+        this.rightBridgeCol.destroy();
+        //this.rightBridge.forEach(piece => piece.setAlpha(1));
         //this.rightBridge[0].setFillStyle(0xd9b38c);   // color más claro
         this.blockedIcon.destroy();
     }

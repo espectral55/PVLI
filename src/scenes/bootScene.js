@@ -38,6 +38,9 @@ preload(){
         this.load.image("stoneGround", "assets/CourseSelectMap/TX Tileset Stone Ground.png");
         this.load.image("walls", "assets/CourseSelectMap/TX Tileset Wall.png");
 
+        // tile maps
+        this.load.tilemapTiledJSON('nivel', 'assets/Maps/nivel.json')
+
 
         for (let i = 1; i <= 10; i++) {
             // imagenes de los niveles
