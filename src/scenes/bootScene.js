@@ -40,6 +40,8 @@ preload(){
 
         // tile maps
         this.load.tilemapTiledJSON('nivel', 'assets/Maps/nivel.json')
+        this.load.tilemapTiledJSON('casa', 'assets/Maps/casa.json')
+        this.load.tilemapTiledJSON('parque', 'assets/Maps/parque.json')
 
 
         // base para los stikers

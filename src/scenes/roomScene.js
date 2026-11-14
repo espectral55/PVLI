@@ -22,15 +22,11 @@ export default class RoomScene extends Phaser.Scene {
 
         this.createBackground();
         this.createMap();
-        //this.createIsland();
-        //this.createBridges();
 
         // Jugador con el aura alrededor
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
         this.player = new Player(this, 240, 350).setScale(2);
 
-        //this.createEnemies();
-        //this.createBullets();
         this.createHUD();
 
         // Prueba, K quita 1 de vida
@@ -164,39 +160,6 @@ export default class RoomScene extends Phaser.Scene {
         this.add.image(735, 520, "dungeon", 197).setScale(3).setAlpha(0.35).setAngle(-10);
     }
 
-    // (Ya no se usa) Isla
-    //  grosor, suelo, pared, borde y antorchas
-    createIsland() {
-        this.add.rectangle(400, 570, 500, 24, 0x3a2838);   // grosor de la isla
-        // Frame = fila * 32 + columna en el tileset 
-        // 225 = suelo, 33 = ladrillo
-        this.add.tileSprite(150, 188, 500, 372, "dungeon", 225).setOrigin(0, 0).setTileScale(3);
-        this.add.tileSprite(150, 140, 500, 48, "dungeon", 33).setOrigin(0, 0).setTileScale(3);
-        this.add.rectangle(400, 350, 500, 420).setStrokeStyle(6, 0x2b1d2a);   // borde
-
-        // Antorchas: llama (frame 296) encima del soporte (frame 328)
-        let torchX = [270, 400, 530];
-        for (let i = 0; i < torchX.length; i++) {
-            this.add.image(torchX[i], 148, "dungeon", 296).setScale(2);
-            this.add.image(torchX[i], 180, "dungeon", 328).setScale(2);
-        }
-    }
-
-    // Puente desbloqueado (izquierda) y bloqueado (derecha, transparente y con una X)
-    createBridges() {
-        this.add.rectangle(75, 360, 170, 64, 0x8a6244);
-        this.add.rectangle(75, 326, 170, 6, 0x4a3222);   // barandillas
-        this.add.rectangle(75, 394, 170, 6, 0x4a3222);
-        this.add.rectangle()
-
-        // guardamoas puente a desbloqear
-        this.rightBridge = [
-            this.add.rectangle(725, 360, 170, 64, 0x8a6244).setAlpha(0.35),
-            this.add.rectangle(725, 326, 170, 6, 0x4a3222).setAlpha(0.35),
-            this.add.rectangle(725, 394, 170, 6, 0x4a3222).setAlpha(0.35)
-        ];
-    }
-
     unlockBridge() {
         this.cleared = true;
         this.rightBridgeLayer.setAlpha(1);
@@ -206,32 +169,6 @@ export default class RoomScene extends Phaser.Scene {
         this.blockedIcon.destroy();
     }
 
-    // enemigos con baras de vida
-    createEnemies() {
-        //this.add.sprite(570, 230, "paranoid", 1).setScale(2).play("paranoid_idle");
-       // this.add.image(570, 188, "healthBars", 74).setScale(2);
-
-        this.add.sprite(570, 350, "martyr", 1).setScale(2).play("martyr_idle");
-        //this.add.image(570, 308, "healthBars", 76).setScale(2);
-
-        this.add.sprite(570, 470, "aggressor", 1).setScale(2).play("aggressor_idle");
-        //this.add.image(570, 428, "healthBars", 74).setScale(2);
-    }
-
-    // Balas random de ejemplpo
-    createBullets() {
-        // Anillo de 12 balas alrededor del Paranoico
-        for (let i = 0; i < 12; i++) {
-            let angle = Phaser.Math.DegToRad(i * 30);
-            this.add.circle(570 + Math.cos(angle) * 70, 230 + Math.sin(angle) * 70, 6, 0xff5fa2);
-        }
-        // Disparos del jugador hacia el Mártir
-        for (let x = 290; x < 530; x += 60) {
-            this.add.rectangle(x, 350, 14, 6, 0xffe066);
-        }
-        // Alma soltada por un enemigo
-        this.add.circle(470, 515, 8, 0x7fd6ff);
-    }
 
     // ui
     createHUD() {

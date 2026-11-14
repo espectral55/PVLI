@@ -12,32 +12,34 @@ export default class ParkScene extends Phaser.Scene {
         // Césped
         // tileSprite repite un trozo como un mosaico
         // setTileScale agranda los trozos
-        this.add.tileSprite(0, 0, 800, 600, "grass", "grassTile").setOrigin(0, 0).setTileScale(1.5);
+        // this.add.tileSprite(0, 0, 800, 600, "grass", "grassTile").setOrigin(0, 0).setTileScale(1.5);
 
-        // Plaza de piedra
+     
+
+        // // Fuente en el centro
+        // this.add.image(400, 290, "parkProps", "fountain").setScale(1.4);
+
+        // // arboles con su sombra,la sombra va primero para q quede debajo
+        // this.add.image(61, 159, "plantShadows", "tree1").setScale(1.5);
+        // this.add.image(45, 95, "plants", "tree1").setScale(1.5);
+        // this.add.image(767, 164, "plantShadows", "tree2").setScale(1.5);
+        // this.add.image(760, 100, "plants", "tree2").setScale(1.5);
+        // this.add.image(30, 330, "plants", "bush").setScale(1.5);
+        // this.add.image(770, 330, "plants", "bush").setScale(1.5);
+        // this.add.image(300, 560, "plants", "bush").setScale(1.5);
+
+        // // Bancos y estatua con sombra
+        // this.add.image(258, 53, "shadows", "bench").setScale(1.5);
+        // this.add.image(250, 40, "parkProps", "bench").setScale(1.5);
+        // this.add.image(558, 53, "shadows", "bench").setScale(1.5);
+        // this.add.image(550, 40, "parkProps", "bench").setScale(1.5);
+        // this.add.image(399, 50, "shadows", "statue").setScale(1.2);
+        // this.add.image(400, 30, "parkProps", "statue").setScale(1.2);
+        this.createMap();
+         // Plaza de piedra
         this.add.rectangle(400, 535, 90, 130, 0x9b968a);
-        this.add.ellipse(400, 290, 600, 420, 0x9b968a).setStrokeStyle(6, 0x6f6a60);
-
-        // Fuente en el centro
-        this.add.image(400, 290, "parkProps", "fountain").setScale(1.4);
-
-        // arboles con su sombra,la sombra va primero para q quede debajo
-        this.add.image(61, 159, "plantShadows", "tree1").setScale(1.5);
-        this.add.image(45, 95, "plants", "tree1").setScale(1.5);
-        this.add.image(767, 164, "plantShadows", "tree2").setScale(1.5);
-        this.add.image(760, 100, "plants", "tree2").setScale(1.5);
-        this.add.image(30, 330, "plants", "bush").setScale(1.5);
-        this.add.image(770, 330, "plants", "bush").setScale(1.5);
-        this.add.image(300, 560, "plants", "bush").setScale(1.5);
-
-        // Bancos y estatua con sombra
-        this.add.image(258, 53, "shadows", "bench").setScale(1.5);
-        this.add.image(250, 40, "parkProps", "bench").setScale(1.5);
-        this.add.image(558, 53, "shadows", "bench").setScale(1.5);
-        this.add.image(550, 40, "parkProps", "bench").setScale(1.5);
-        this.add.image(399, 50, "shadows", "statue").setScale(1.2);
-        this.add.image(400, 30, "parkProps", "statue").setScale(1.2);
-
+        this.add.ellipse(400, 295, 600, 420, 0x9b968a).setStrokeStyle(6, 0x6f6a60);
+        
         this.createPeople();
         this.createShop();
 
@@ -50,8 +52,34 @@ export default class ParkScene extends Phaser.Scene {
         // Jugador
         this.player = new Player(this, 400, 555).setScale(1.5);
 
+        this.physics.add.collider(this.player, this.colitionsLayer);
+        this.physics.add.collider(this.player, this.propsLayer);
+
         this.createCounters();
         this.stickerMenu = new StickerMenu(this, 715, 80);
+    }
+
+    createMap(){
+        const map = this.make.tilemap({key: 'parque'});
+        const plantTileset = map.addTilesetImage('PlantTileset', 'plants');
+        const grassTileset = map.addTilesetImage('GrassTileset', 'grass');
+        const propsTileset = map.addTilesetImage('PropsTileset', 'parkProps');
+        const wallsTileset = map.addTilesetImage('WallTileset', 'walls');
+
+        const allTilesets = [plantTileset, grassTileset, propsTileset, wallsTileset];
+
+        this.grassLayer = map.createLayer('Grass', allTilesets);
+        this.colitionsLayer = map.createLayer('Colisiones', allTilesets);
+        this.propsLayer = map.createLayer('Props', allTilesets);
+
+
+        const offsetX = (800 - map.widthInPixels) / 2;
+        const offsetY = (600 - map.heightInPixels) / 2;
+        [this.grassLayer, this.colitionsLayer, this.propsLayer].forEach(layer => layer.setPosition(offsetX, offsetY));
+
+        this.colitionsLayer.setCollisionByExclusion([-1]);
+        this.propsLayer.setCollisionByExclusion([-1]);
+
     }
 
     // Las 10 personas en círculo. El frame i es la persona i+1
