@@ -1,5 +1,6 @@
 import Player from "../player.js";
 import Chan from "../chan.js";
+import StickerMenu from "../stickerMenu.js";
 
 // Parque 
 export default class ParkScene extends Phaser.Scene {
@@ -50,6 +51,7 @@ export default class ParkScene extends Phaser.Scene {
         this.player = new Player(this, 400, 555).setScale(1.5);
 
         this.createCounters();
+        this.stickerMenu = new StickerMenu(this, 715, 80);
     }
 
     // Las 10 personas en círculo. El frame i es la persona i+1
@@ -81,7 +83,7 @@ export default class ParkScene extends Phaser.Scene {
     }
 
     update() {
-        if (this.levelPopup || !this.player) return;   // con popup abierto no se comprueba nada
+        if (this.levelPopup || this.stickerMenu.isOpen || !this.player) return;   // con popup abierto no se comprueba nada
 
         for (let chan of this.chans) {
             let near = chan.isPlayerNear(this.player);

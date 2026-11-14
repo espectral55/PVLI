@@ -42,12 +42,18 @@ preload(){
         this.load.tilemapTiledJSON('nivel', 'assets/Maps/nivel.json')
 
 
+        // base para los stikers
+        this.load.image("stickerBase", "assets/Stickers/stickerBase.png");
+
         for (let i = 1; i <= 10; i++) {
             // imagenes de los niveles
             this.load.image("level" + i, "assets/Level" + i + ".png");
             // imagenes de las memorias
             this.load.image("memory" + i, "assets/Memories/memory" + i + ".png");
+            // imagenes de estikersssss
+            this.load.image("sticker" + i, "assets/Stickers/" + i + ".png");
         }
+
 
         
 
