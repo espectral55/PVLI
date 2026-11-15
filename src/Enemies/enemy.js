@@ -1,4 +1,4 @@
-import Bullet from "./bullet.js";
+import Bullet from "../bullet.js";
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y){

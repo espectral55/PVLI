@@ -1,7 +1,9 @@
 import Player from "../player.js";
 import Bullet from "../bullet.js";
-import Enemy from "../enemy.js";
-import StaticEnemy from "../staticEnemy.js";
+import Enemy from "../Enemies/enemy.js";
+import StaticEnemy from "../Enemies/staticEnemy.js";
+import MeleeEnemy from "../Enemies/meeleEnemy.js";
+import HealerEnemy from "../Enemies/healerEnemy.js";
 
 // Sala dentro de la mente de una persona 
 export default class RoomScene extends Phaser.Scene {
@@ -87,10 +89,10 @@ export default class RoomScene extends Phaser.Scene {
         this.enemy = new Enemy(this, 570, 230).setScale(2).play("aggressor_idle");
         this.enemies.add(this.enemy);
 
-        this.enemy = new Enemy(this, 570, 430).setScale(2).play("martyr_idle");
+        this.enemy = new MeleeEnemy(this, 570, 230).setScale(2).play("aggressor_idle");
         this.enemies.add(this.enemy);
 
-        this.enemy = new StaticEnemy(this, 570, 330).setScale(2).play("paranoid_idle");
+        this.enemy = new HealerEnemy(this, 570, 430).setScale(2).play("martyr_idle");
         this.enemies.add(this.enemy);
 
         this.physics.add.collider(this.player, this.wallsLayer);
