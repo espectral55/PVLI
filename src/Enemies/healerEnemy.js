@@ -29,7 +29,7 @@ export default class HealerEnemy extends Enemy {
     preUpdate(t, dt){
         Phaser.Physics.Arcade.Sprite.prototype.preUpdate.call(this, t, dt);
         this.updateHealthBar();
-        this.healTimer -= dt;
+        this.healTimer -= dt * this.getSlow();
 
         const ally = this.findClosestAlly();
         if (!ally){

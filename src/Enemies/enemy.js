@@ -55,17 +55,21 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    getSlow(){
+        return this.scene.slowFactor || 1;
+    }
+
     shoot(targetX, targetY){
         const bullet = new Bullet(this.scene, this.x, this.y);
         if (this.scene.enemyBullets){
             this.scene.enemyBullets.add(bullet);
-            bullet.fire(targetX, targetY, 600);
+            bullet.fire(targetX, targetY, 600 * this.getSlow());
         }
     }
 
     move(targetX, targetY, speed = 100){
         let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY);
-        this.scene.physics.velocityFromRotation(angle, speed, this.body.velocity);
+        this.scene.physics.velocityFromRotation(angle, speed * this.getSlow(), this.body.velocity);
     }
 
     preUpdate(t, dt){
@@ -90,7 +94,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                 this.cooldown = this.baseCooldown;
                 this.shoot(playerX, playerY);
             }
-            this.cooldown -= dt;
+            this.cooldown -= dt * this.getSlow();
         }
     }
 }

@@ -18,7 +18,7 @@ export default class MeleeEnemy extends Enemy {
         const player = this.scene.player;
         if (!player) return;
 
-        this.attackTimer -= dt;
+        this.attackTimer -= dt * this.getSlow();
         const dist = Phaser.Math.Distance.Between(this.x, this.y, player.x, player.y);
 
         if (dist > this.attackRange){

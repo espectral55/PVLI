@@ -11,6 +11,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setSize(7, 8, true);
         this.life = 5; //vida jugador
         this.canMove = true; // false mientras hay un popup abierto
+        this.facing = "down";
        
         this.keys = {}
         this.keys.a = this.scene.input.keyboard.addKey("A");
@@ -29,6 +30,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(amount = 1){
+        //con aura activada cualquier golpe te mata
+        if(this.scene.auraActive){
+            amount = this.life;
+        }
         this.life -= amount;
         if (this.life < 0){
             this.life = 0;
