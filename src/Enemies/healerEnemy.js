@@ -9,6 +9,11 @@ export default class HealerEnemy extends Enemy {
         this.healAmount = 1;          // vidas que cura por tick
         this.healCooldown = 1500;     // teimpo entre curaciones
         this.healTimer = 0;
+
+        //rafaga en anillo 
+        this.ringCount = 10; 
+        this.ringCooldown = 2500;
+        this.ringTimer = this.ringCooldown;
     }
 
     // enemigo más cercano que no sea él mismo
@@ -30,6 +35,13 @@ export default class HealerEnemy extends Enemy {
         Phaser.Physics.Arcade.Sprite.prototype.preUpdate.call(this, t, dt);
         this.updateHealthBar();
         this.healTimer -= dt * this.getSlow();
+
+        //anillo de balas
+        this.ringTimer -= dt * this.getSlow();
+        if ( this.ringTimer <= 0){
+            this.ringTimer = this.ringCooldown;
+            this.shootRing(this.ringCount);
+        }
 
         const ally = this.findClosestAlly();
         if (!ally){

@@ -112,6 +112,9 @@ export default class RoomScene extends Phaser.Scene {
         this.enemy = new HealerEnemy(this, 570, 430).setScale(2).play("martyr_idle");
         this.enemies.add(this.enemy);
 
+        this.enemy = new StaticEnemy(this, 420, 300).setScale(2).play("paranoid_idle");
+        this.enemies.add(this.enemy);
+
         this.physics.add.collider(this.player, this.wallsLayer);
         this.physics.add.collider(this.player, this.columnLayer);
         this.physics.add.collider(this.player, this.leftBridgeLayer);

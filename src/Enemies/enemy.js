@@ -1,5 +1,10 @@
 import Bullet from "../bullet.js";
 
+//patron balas
+const BULLET_SPEED = 200;
+const FAN_COUNT = 5; //balas abanicoç
+const FAN_SPREAD = 40; //apertura abanico grados
+
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y){
         super(scene, x, y, "paranoid", 0);
@@ -10,7 +15,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.life = this.maxLife;
 
         // ms entre disparos. con las variantes podemos cambiarlo
-        this.baseCooldown = 3000;   
+        this.baseCooldown = 1500;   
         this.cooldown = this.baseCooldown;
         this.canMove = true;
         this.isMoving = false;
@@ -60,10 +65,36 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     shoot(targetX, targetY){
+        //abanico hacia jugador
+        this.shootFan(targetX, targetY, FAN_COUNT, FAN_SPREAD);
+    }
+
+    //dispara bala en una direccion
+    shootAngle(angle){
+        if(!this.scene.enemyBullets) return;
         const bullet = new Bullet(this.scene, this.x, this.y);
-        if (this.scene.enemyBullets){
-            this.scene.enemyBullets.add(bullet);
-            bullet.fire(targetX, targetY, 600 * this.getSlow());
+        this.scene.enemyBullets.add(bullet); //la metes en el grupo primero xq add pone la velocidad a 0
+        bullet.setAngle(angle);
+        this.scene.physics.velocityFromAngle(angle, BULLET_SPEED * this.getSlow(), bullet.body.velocity);
+    }
+
+    //abanico
+    shootFan(targetX, targetY, count, spread){
+        //angullo hacia jugador
+        //angle.between lo da en radianes , asi q hay que pasarlo a grados
+        let center = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY));
+        let start = center - spread / 2; //primera bala, en borde
+        let step = spread / (count -1); //separacion entre balas
+        for (let i = 0; i < count; i++){
+            this.shootAngle(start + i * step);
+        }
+    }
+
+    //anillo
+    shootRing(count){
+        let step = 360 / count; //una vuelta entera entre numero de balas
+        for (let i = 0; i < count; i ++){
+            this.shootAngle(i* step);
         }
     }
 
