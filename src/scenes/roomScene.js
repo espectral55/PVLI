@@ -4,6 +4,7 @@ import Enemy from "../Enemies/enemy.js";
 import StaticEnemy from "../Enemies/staticEnemy.js";
 import MeleeEnemy from "../Enemies/meeleEnemy.js";
 import HealerEnemy from "../Enemies/healerEnemy.js";
+import Candy from "../candy.js";
 
 //valores para e aura
 const AURA_SLOW = 0.3; //todo va al 30% de velocidad
@@ -38,6 +39,11 @@ export default class RoomScene extends Phaser.Scene {
         // Jugador con el aura alrededor
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
         this.player = new Player(this, 240, 350).setScale(2);
+
+        this.candies = this.add.group();
+        this.candies.add(new Candy(this, 330, 260));        // vale 1
+        this.candies.add(new Candy(this, 420, 420, 5));     // vale 5
+        this.physics.add.overlap(this.player, this.candies, (player, candy) => candy.collect());
 
         this.createHUD();
 

@@ -1,6 +1,7 @@
 import Player from "../player.js";
 import Chan from "../chan.js";
 import StickerMenu from "../stickerMenu.js";
+import { getCandies } from "../candy.js";
 
 // Parque 
 export default class ParkScene extends Phaser.Scene {
@@ -56,6 +57,7 @@ export default class ParkScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.propsLayer);
 
         this.createCounters();
+        this.createCandyCounter();
         this.stickerMenu = new StickerMenu(this, 715, 80);
     }
 
@@ -111,6 +113,7 @@ export default class ParkScene extends Phaser.Scene {
     }
 
     update() {
+        this.candyText.setText("Caramelos: " + getCandies(this.registry));
         if (this.levelPopup || this.stickerMenu.isOpen || !this.player) return;   // con popup abierto no se comprueba nada
 
         for (let chan of this.chans) {
@@ -123,6 +126,12 @@ export default class ParkScene extends Phaser.Scene {
             }
             chan.playerWasNear = near;
         }
+    }
+
+    createCandyCounter() {
+        this.add.nineslice(85, 80, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
+        this.add.image(32, 80, "candy").setScale(1.5);
+        this.candyText = this.add.text(50, 80, "", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
     }
 
     openLevelPopup(chan) {

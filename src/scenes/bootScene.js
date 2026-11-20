@@ -33,6 +33,7 @@ preload(){
         this.load.image("plantShadows", "assets/CourseSelectMap/TX Shadow Plant.png");
         this.load.image("structures", "assets/CourseSelectMap/TX Struct.png");
         this.load.image("shopkeeper", "assets/CourseSelectMap/TX Player.png");
+        this.load.image("candy", "assets/candy.png");
 
         // Casa
         this.load.image("stoneGround", "assets/CourseSelectMap/TX Tileset Stone Ground.png");
@@ -70,6 +71,7 @@ create() {
     this.createAnims();
     this.scene.start("title");
 }
+
 
 // Algunas imágenes tienen objetos de distintos tamaños
 //add(nombre, 0, x, y, ancho, alto)
