@@ -8,6 +8,8 @@ export default class BonusScene extends Phaser.Scene {
 
     init(data) {
         this.levelId = data.levelId || 1;
+        this.enemiesKilled = data.enemiesKilled || 0;
+        this.candiesCollected = data.candiesCollected || 0;
         this.triggered = false;
     }
 
@@ -52,13 +54,12 @@ export default class BonusScene extends Phaser.Scene {
 
         // botón para terminar el nivel
         const bg = this.add.nineslice(400, 540, "buttons", 0, 80, 15, 5, 5, 5, 5).setScale(3).setDepth(12);
-        this.add.text(400, 538, "BORRAR RECUERDO", { font: "bold 18px monospace", fill: "#f3e9e4" })
-            .setOrigin(0.5).setDepth(13);
+        this.add.text(400, 538, "BORRAR RECUERDO", { font: "bold 18px monospace", fill: "#f3e9e4" }).setOrigin(0.5).setDepth(13);
         bg.setInteractive({ useHandCursor: true });
         bg.on("pointerover", () => bg.setTint(0xffc9e8));
         bg.on("pointerout", () => bg.clearTint());
         bg.on("pointerup", () => {
-            this.scene.start("result", { win: true, levelId: this.levelId });
+            this.scene.start("result", { win: true, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
         });
     }
 }

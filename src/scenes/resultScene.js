@@ -12,6 +12,9 @@ export default class ResultScene extends Phaser.Scene {
         this.win = data.win || false;
         this.levelId = data.levelId || 1;
 
+        this.enemiesKilled = data.enemiesKilled || 0;
+        this.candiesCollected = data.candiesCollected || 0;
+
         // guardamos el nivel completado en el registro para que el parque lo sepa. el resgistry es como un almacén global que comparten las escenas
         if (this.win) {
             let done = this.registry.get("completedLevels") || [];
@@ -46,7 +49,9 @@ export default class ResultScene extends Phaser.Scene {
         }
 
         // Resumen de la incursión
-        this.add.text(275, 362, "Enemigos derrotados: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.add.image(285, 330, "candy").setScale(1.5);
+        this.add.text(305, 330, "Caramelos obtenidos: " + this.candiesCollected, { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.add.text(275, 362, "Enemigos derrotados: " + this.enemiesKilled, { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
 
         this.createButton(400, 445, "Volver al parque", "park");
         if (!this.win) {

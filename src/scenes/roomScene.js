@@ -26,6 +26,10 @@ export default class RoomScene extends Phaser.Scene {
     init(data) {
         this.levelId = data.levelId || 1;
         this.cleared = false;
+
+        //estadisticasd
+        this.enemiesKilled = 0;
+        this.candiesCollected = 0;
     }
 
 
@@ -34,7 +38,7 @@ export default class RoomScene extends Phaser.Scene {
 
         //estado del aura
         this.slowFactor = 1; //velocidad del mundo, 1 es normal, 0.3 lento
-        this.auraActivate = false; 
+        this.auraActive = false; 
         this.auraEnergy = 100; //energia del aura, 100 lena
         //el reloj de la escena no se reinicia solo, por eso fallaba ek aura
         this.time.timeScale = 1;
@@ -53,7 +57,10 @@ export default class RoomScene extends Phaser.Scene {
         this.candies = this.add.group();
         this.candies.add(new Candy(this, 330, 260));        // vale 1
         this.candies.add(new Candy(this, 420, 420, 5));     // vale 5
-        this.physics.add.overlap(this.player, this.candies, (player, candy) => candy.collect());
+          this.physics.add.overlap(this.player, this.candies, (player, candy) => {
+            if (!candy.collected) this.candiesCollected += candy.value; //solo la primera vez que se toca
+            candy.collect();
+        });
 
         this.createHUD();
 
@@ -73,7 +80,7 @@ export default class RoomScene extends Phaser.Scene {
         
         // Prueba, C sala completada ,pantalla  victoria
         this.input.keyboard.on("keydown-C", () => {
-            this.scene.start("result", { win: true, levelId: this.levelId });
+            this.scene.start("result", { win: true, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
         });
 
         // ESC pausa, se congela la sala y se abre el menú de pausa encima
@@ -157,10 +164,12 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     handleBulletEnemyCollision(bullet, enemy){
+        if(!enemy.active) return; //ya muerto
         if (enemy.takeDamage){
             let damage = this.player.damage; //1o 2 con la mejora de daño
             if (this.auraActive) damage *= 2; //si activada el jugador hace doble de daño
             enemy.takeDamage(damage);
+            if (enemy.life <= 0) this.enemiesKilled++;
         }
         bullet.destroy();
     }
@@ -350,7 +359,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // altura del puente hardcodeada por ahora oofff
         if (this.cleared && this.player.x > 700 && Math.abs(this.player.y - 350) < 32) {
-            this.scene.start("bonus", { levelId: this.levelId });
+            this.scene.start("bonus", { levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
             return;
         }
 
@@ -366,7 +375,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Sin vida, pantalla  Gameover
         if (this.player.life === 0) {
-            this.scene.start("result", { win: false, levelId: this.levelId });
+            this.scene.start("result", { win: false, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
         }
     }
 }
