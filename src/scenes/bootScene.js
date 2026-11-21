@@ -1,3 +1,5 @@
+import PowerUps from "../powerUps.js";
+
 //escena que  arga todas las imagenes una vez, recorta lo q haga falta. crea las ani amciones y pasa al titulo
 export default class BootScene extends Phaser.Scene{
     constructor(){
@@ -67,6 +69,8 @@ preload(){
 }
 
 create() {
+    //powerups
+    this.registry.set("powerUps", new PowerUps());
     this.createFrames();
     this.createAnims();
     this.scene.start("title");

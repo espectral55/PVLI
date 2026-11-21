@@ -46,8 +46,6 @@ export default class ResultScene extends Phaser.Scene {
         }
 
         // Resumen de la incursión
-        this.add.circle(285, 330, 8, 0x7fd6ff);
-        this.add.text(305, 330, "Almas ganadas: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
         this.add.text(275, 362, "Enemigos derrotados: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
 
         this.createButton(400, 445, "Volver al parque", "park");

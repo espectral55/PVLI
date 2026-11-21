@@ -4,12 +4,16 @@ import Enemy from "../Enemies/enemy.js";
 import StaticEnemy from "../Enemies/staticEnemy.js";
 import MeleeEnemy from "../Enemies/meeleEnemy.js";
 import HealerEnemy from "../Enemies/healerEnemy.js";
-import Candy from "../candy.js";
+import Candy, {getCandies} from "../candy.js";
 
 //valores para e aura
 const AURA_SLOW = 0.3; //todo va al 30% de velocidad
 const AURA_DRAIN = 25; //energia que gasta por segundo
 const AURA_RECHARGE = 10; //energia que recupera
+
+//powerups
+const AURA_DRAIN_UPGRADED = 15;
+const MEDKIT_HEAL = 2; 
 
 // Sala dentro de la mente de una persona 
 export default class RoomScene extends Phaser.Scene {
@@ -32,6 +36,12 @@ export default class RoomScene extends Phaser.Scene {
         this.slowFactor = 1; //velocidad del mundo, 1 es normal, 0.3 lento
         this.auraActivate = false; 
         this.auraEnergy = 100; //energia del aura, 100 lena
+        //el reloj de la escena no se reinicia solo, por eso fallaba ek aura
+        this.time.timeScale = 1;
+
+        //mejoras
+        this.powerUps = this.registry.get("powerUps");
+        this.auraDrain = this.powerUps.hasUpgrade("aura") ? AURA_DRAIN_UPGRADED : AURA_DRAIN;
 
         this.createBackground();
         this.createMap();
@@ -52,6 +62,9 @@ export default class RoomScene extends Phaser.Scene {
 
         //SHIFT activa el aura
         this.input.keyboard.on("keydown-SHIFT", () => this.startAura());
+
+        //q es botiquin
+        this.input.keyboard.on("keydown-Q", () => this.useMedkit());
 
         // Prueba, K quita 1 de vida
         this.input.keyboard.on("keydown-K", () => {
@@ -145,7 +158,8 @@ export default class RoomScene extends Phaser.Scene {
 
     handleBulletEnemyCollision(bullet, enemy){
         if (enemy.takeDamage){
-            let damage = this.auraActive ? 2 : 1; //si esta activada el jugador hace el doble de daño
+            let damage = this.player.damage; //1o 2 con la mejora de daño
+            if (this.auraActive) damage *= 2; //si activada el jugador hace doble de daño
             enemy.takeDamage(damage);
         }
         bullet.destroy();
@@ -218,15 +232,50 @@ export default class RoomScene extends Phaser.Scene {
         // Sala actual
         this.add.text(14, 110, "SALA 1/3", { font: "bold 16px monospace", fill: "#f3e9e4", backgroundColor: "#000000aa", padding: { x: 6, y: 3 } });
 
-        // Almas y arma 
-        this.add.circle(650, 28, 8, 0x7fd6ff);
-        this.add.text(668, 28, "Almas: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        // Caramelos y arma
+        this.add.image(625, 28, "candy").setScale(1.5);
+        this.candyText = this.add.text(643, 28, "", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.updateCandyText();
         this.add.nineslice(696, 72, "buttons", 4, 60, 13, 5, 5, 5, 5).setScale(3);
-        this.add.image(624, 72, "dungeon", "sword").setScale(1.2).setAngle(45);
-        this.add.text(644, 72, "Pistola", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        let hasShotgun = this.powerUps.hasUpgrade("shotgun");
+        this.add.image(624, 72, "dungeon", hasShotgun ? "swordBlue" : "sword").setScale(1.2).setAngle(45);
+        this.add.text(644, 72, hasShotgun ? "Escopeta" : "Pistola", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+
+        // Consumibles
+        this.add.image(340, 28, "effects", 0).setScale(0.6);
+        this.shieldText = this.add.text(360, 28, "", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.add.image(340, 72, "dungeon", 424).setScale(2);
+        this.medkitText = this.add.text(360, 72, "", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.updateConsumablesHUD();
+
+        //cuando cambian los consumibles o los caramelos se actualiza el HUD 
+        this.powerUps.on("consumables-changed", this.updateConsumablesHUD, this);
+        this.registry.events.on("changedata-candies", this.updateCandyText, this);
+        //al cerrar la escena dejamos de escuchar, si no los listeners seguirian vivos
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            this.powerUps.off("consumables-changed", this.updateConsumablesHUD, this);
+            this.registry.events.off("changedata-candies", this.updateCandyText, this);
+        });
+
 
         // Controles abajo
-        this.add.text(400, 585, "WASD mover · Click disparar · SHIFT aura · ESC pausa", { font: "bold 12px monospace", fill: "#b8a9a3" }).setOrigin(0.5);
+        this.add.text(400, 585, "WASD mover · Click disparar · SHIFT aura · ESC pausa · Q botiquín", { font: "bold 12px monospace", fill: "#b8a9a3" }).setOrigin(0.5);
+    }
+
+    updateCandyText(){
+        this.candyText.setText("Caramelos: " + getCandies(this.registry));
+    }
+
+    updateConsumablesHUD(){
+        this.shieldText.setText("Escudos: " + this.powerUps.getCount("shield"));
+        this.medkitText.setText("Botiquines: " + this.powerUps.getCount("medkit") + " (Q)");
+    }
+
+    useMedkit(){
+        if(this.player.life >= this.player.maxLife) return;
+        if(this.powerUps.useConsumable("medkit")){
+            this.player.heal(MEDKIT_HEAL);
+        }
     }
 
     //aura
@@ -278,7 +327,7 @@ export default class RoomScene extends Phaser.Scene {
         let seconds = dt / 1000; //dt viene en ms
 
         if(this.auraActive){
-            this.auraEnergy -= AURA_DRAIN * seconds;
+            this.auraEnergy -= this.auraDrain * seconds;
             if(this.auraEnergy <= 0){
                 this.auraEnergy = 0;
                 this.endAura();
@@ -313,7 +362,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Cada frame copiamos la vida del jugador al HUD
         this.lifeText.setText("VIDA: " + this.player.life);
-        this.lifeBar.setFrame(5 - this.player.life);
+        this.lifeBar.setFrame(Math.max(0, 5 - this.player.life)); //con 6 de vida se queda llena
 
         // Sin vida, pantalla  Gameover
         if (this.player.life === 0) {

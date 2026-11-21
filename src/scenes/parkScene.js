@@ -129,9 +129,9 @@ export default class ParkScene extends Phaser.Scene {
     }
 
     createCandyCounter() {
-        this.add.nineslice(85, 80, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
-        this.add.image(32, 80, "candy").setScale(1.5);
-        this.candyText = this.add.text(50, 80, "", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
+        this.add.nineslice(85, 30, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
+        this.add.image(32, 30, "candy").setScale(1.5);
+        this.candyText = this.add.text(50, 30, "", { font: "bold 14px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
     }
 
     openLevelPopup(chan) {
@@ -205,10 +205,6 @@ export default class ParkScene extends Phaser.Scene {
     // Almas, izquierda
     // mentes completadas, derecha
     createCounters() {
-        this.add.nineslice(85, 30, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
-        this.add.circle(32, 30, 8, 0x7fd6ff);   // alma (de momento un círculo)
-        this.add.text(52, 30, "Almas: 0", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0, 0.5);
-
         this.add.nineslice(715, 30, "buttons", 0, 50, 15, 5, 5, 5, 5).setScale(3);
         //this.add.text(715, 30, "Mentes 0/10", { font: "bold 16px monospace", fill: "#f3e9e4" }).setOrigin(0.5);
 
