@@ -1,5 +1,22 @@
 h1 {
-  color: rgb(57, 100, 218);
+  font-family: "Press Start 2P", monospace;
+    font-size: 100px;
+    text-align: center;
+    color: #3a2519;
+}
+
+#juego {
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+
+body {
+    background-image: url("../assets/BackgroundPhoto.jpe");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;            /* no se mueve al hacer scroll */
+    background-color: rgb(200, 224, 241);    /* color mientras carga */
 }
 
 .clase {
@@ -7,7 +24,7 @@ h1 {
 }
 
 .botones {
-  background-color: rgb(171, 186, 228);
+  background-color: rgb(228, 187, 171);
   color: black;
   padding: 10px 10px;
   border: 3px solid rgb(0, 0, 0);

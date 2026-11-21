@@ -14,6 +14,7 @@ var config = {
 	type: Phaser.AUTO,
 	width: 800,
 	height: 600,
+	parent: "juego",
 	pixelArt: true, // pixelart no se ve borroso al escalarlo
 	scale: {
 		autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
