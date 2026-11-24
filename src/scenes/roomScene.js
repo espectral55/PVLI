@@ -26,8 +26,10 @@ export default class RoomScene extends Phaser.Scene {
     init(data) {
         this.levelId = data.levelId || 1;
         this.cleared = false;
+        this.roomNum = data.roomNum || 1;
+        this.playerLife = data.playerLife || 5;
 
-        //estadisticasd
+        //estadisticas
         this.enemiesKilled = 0;
         this.candiesCollected = 0;
     }
@@ -53,6 +55,7 @@ export default class RoomScene extends Phaser.Scene {
         // Jugador con el aura alrededor
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
         this.player = new Player(this, 240, 350).setScale(2);
+        this.player.life = this.playerLife;
 
         this.candies = this.add.group();
         this.candies.add(new Candy(this, 330, 260));        // vale 1
@@ -78,7 +81,7 @@ export default class RoomScene extends Phaser.Scene {
             this.player.takeDamage(1);
         });
         
-        // Prueba, C sala completada ,pantalla  victoria
+        // Prueba, C sala completada,pantalla  victoria
         this.input.keyboard.on("keydown-C", () => {
             this.scene.start("result", { win: true, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
         });
@@ -90,7 +93,6 @@ export default class RoomScene extends Phaser.Scene {
         });
 
         this.input.on("pointerdown", (pointer)=>{
-            console.log(pointer.worldX, pointer.worldY); //coordenadas de donde haces click
             if (pointer.leftButtonDown()){
                 this.player.shoot(pointer.worldX, pointer.worldY);
             }
@@ -105,7 +107,6 @@ export default class RoomScene extends Phaser.Scene {
         this.enemies = this.physics.add.group({
             classType: Enemy,
             runChildUpdate: true
-
         })
 
         this.enemyBullets = this.physics.add.group({
@@ -129,17 +130,7 @@ export default class RoomScene extends Phaser.Scene {
             this
         )
 
-        this.enemy = new Enemy(this, 570, 230).setScale(2).play("aggressor_idle");
-        this.enemies.add(this.enemy);
-
-        this.enemy = new MeleeEnemy(this, 520, 350).setScale(2).play("aggressor_idle");
-        this.enemies.add(this.enemy);
-
-        this.enemy = new HealerEnemy(this, 570, 430).setScale(2).play("martyr_idle");
-        this.enemies.add(this.enemy);
-
-        this.enemy = new StaticEnemy(this, 420, 300).setScale(2).play("paranoid_idle");
-        this.enemies.add(this.enemy);
+        this.createEnemies();
 
         this.physics.add.collider(this.player, this.wallsLayer);
         this.physics.add.collider(this.player, this.columnLayer);
@@ -198,6 +189,40 @@ export default class RoomScene extends Phaser.Scene {
         this.columnLayer.setCollisionByExclusion([-1]);
     }
 
+    createEnemies(){
+        let option = Phaser.Math.RND.between(1, 4);
+        if (option == 1){
+            this.enemy = new MeleeEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new StaticEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("paranoid_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new HealerEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("martyr_idle");
+            this.enemies.add(this.enemy);
+        }
+        else if (option == 2){
+            this.enemy = new Enemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new MeleeEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+        }
+        else if (option == 3){
+            this.enemy = new HealerEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("martyr_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new Enemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+        }
+        else{
+            this.enemy = new StaticEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("paranoid_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new MeleeEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+            this.enemy = new MeleeEnemy(this, Phaser.Math.RND.between(400, 620),Phaser.Math.RND.between(200, 500)).setScale(2).play("aggressor_idle");
+            this.enemies.add(this.enemy);
+        }
+
+        
+    }
+
     // Estrellas  flotando en el fondo
     createBackground() {
         for (let i = 0; i < 90; i++) {
@@ -213,6 +238,7 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     unlockBridge() {
+        this.roomNum += 1;
         this.cleared = true;
         this.rightBridgeLayer.setAlpha(1);
         this.rightBridgeCol.destroy();
@@ -239,7 +265,7 @@ export default class RoomScene extends Phaser.Scene {
         this.lifeBar = this.add.image(190, 84, "HealthBars", 0).setScale(3).setOrigin(0, 0.5);
 
         // Sala actual
-        this.add.text(14, 110, "SALA 1/3", { font: "bold 16px monospace", fill: "#f3e9e4", backgroundColor: "#000000aa", padding: { x: 6, y: 3 } });
+        this.add.text(14, 110, "SALA " + this.roomNum + "/" + this.levelId, { font: "bold 16px monospace", fill: "#f3e9e4", backgroundColor: "#000000aa", padding: { x: 6, y: 3 } });
 
         // Caramelos y arma
         this.add.image(625, 28, "candy").setScale(1.5);
@@ -291,8 +317,10 @@ export default class RoomScene extends Phaser.Scene {
     startAura(){
         //solo activar si no lo estaba ya y si la barra esta llena
         if (this.auraActive || this.auraEnergy < 100) return;
-
+        // Se guarda la vida del jugador
         this.auraActive = true;
+        this.playerLifeBefore = this.player.life;
+        this.player.life = 1;
         this.setSlowFactor(AURA_SLOW);
 
         //visual
@@ -304,7 +332,7 @@ export default class RoomScene extends Phaser.Scene {
     endAura(){
         this.auraActive = false;
         this.setSlowFactor(1);
-
+        this.player.life = this.playerLifeBefore;
         //resetear a como estaba
          //visual
         this.slowOverlay.setVisible(false);
@@ -355,11 +383,17 @@ export default class RoomScene extends Phaser.Scene {
         // WIP de desbloqueo de caminosss
         if (!this.cleared && this.enemies.countActive(true) === 0) {
             this.unlockBridge();
+            console.log(this.roomNum);
         }
 
         // altura del puente hardcodeada por ahora oofff
         if (this.cleared && this.player.x > 700 && Math.abs(this.player.y - 350) < 32) {
-            this.scene.start("bonus", { levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
+            if (this.roomNum == this.levelId + 1){
+                this.scene.start("bonus", { levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
+            }
+            else {
+                this.scene.start("room", { levelId: this.levelId, roomNum: this.roomNum, playerLife: this.player.life });
+            }
             return;
         }
 

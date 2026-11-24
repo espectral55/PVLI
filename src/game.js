@@ -23,7 +23,7 @@ var config = {
 		default : 'arcade',
 		arcade: {
 			gravity : { y: 0},
-			debug: true
+			debug: false
 		}
 	},
 	// La primera de la lista es la que arranca

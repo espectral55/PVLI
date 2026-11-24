@@ -165,7 +165,7 @@ export default class ParkScene extends Phaser.Scene {
         // botones dentro de los círculos
         items.push(this.makePopupButton(px(1322), py(642), 10, "JUGAR", () => {
             this.closeLevelPopup();
-            this.scene.start("room", { levelId: chan.levelId });
+            this.scene.start("room", { levelId: chan.levelId, roomNum: 1, playerLife: this.player.life });
         }));
         items.push(this.makePopupButton(px(1250), py(793), -28, "IGNORAR", () => this.closeLevelPopup()));
 
