@@ -30,8 +30,8 @@ export default class RoomScene extends Phaser.Scene {
         this.playerLife = data.playerLife || 5;
 
         //estadisticas
-        this.enemiesKilled = 0;
-        this.candiesCollected = 0;
+        this.enemiesKilled = data.enemiesKilled || 0;
+        this.candiesCollected = data.candiesCollected || 0;
     }
 
 
@@ -392,7 +392,7 @@ export default class RoomScene extends Phaser.Scene {
                 this.scene.start("bonus", { levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
             }
             else {
-                this.scene.start("room", { levelId: this.levelId, roomNum: this.roomNum, playerLife: this.player.life });
+                this.scene.start("room", { levelId: this.levelId, roomNum: this.roomNum, playerLife: this.player.life, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
             }
             return;
         }

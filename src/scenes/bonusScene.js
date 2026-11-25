@@ -6,11 +6,11 @@ export default class BonusScene extends Phaser.Scene {
         super({ key: "bonus" });
     }
 
-    init(data) {
+        init(data) {
         this.levelId = data.levelId || 1;
+        this.triggered = false;
         this.enemiesKilled = data.enemiesKilled || 0;
         this.candiesCollected = data.candiesCollected || 0;
-        this.triggered = false;
     }
 
     create() {
@@ -58,7 +58,7 @@ export default class BonusScene extends Phaser.Scene {
         bg.setInteractive({ useHandCursor: true });
         bg.on("pointerover", () => bg.setTint(0xffc9e8));
         bg.on("pointerout", () => bg.clearTint());
-        bg.on("pointerup", () => {
+                bg.on("pointerup", () => {
             this.scene.start("result", { win: true, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
         });
     }
