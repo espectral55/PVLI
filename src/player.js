@@ -1,6 +1,6 @@
 import Bullet from "./bullet.js";
 
-const SPEED = 100; // para las anims
+const SPEED = 150; // para las anims
 
 //powerups
 const BULLET_SPEED = 600; 
