@@ -54,7 +54,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Jugador con el aura alrededor
         this.aura = this.add.image(240, 350, "effects", 5).setScale(1.6).setAlpha(0.5);
-        this.player = new Player(this, 240, 350).setScale(2);
+        this.player = new Player(this, 240, 350).setScale(1.7);
         this.player.life = this.playerLife;
 
         this.candies = this.add.group();
