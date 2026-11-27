@@ -1,4 +1,5 @@
 import Player from "../player.js";
+import levelData from "../levelData.js";
 
 // sala final del personaje que desbloquea el recuerdo esencial
 export default class BonusScene extends Phaser.Scene {
@@ -52,6 +53,32 @@ export default class BonusScene extends Phaser.Scene {
         const img = this.add.image(400, 265, key).setDepth(11);
         img.setScale(Math.min(700 / img.width, 440 / img.height));
 
+        // posicioj del mensaje PERFECTA
+        const s = img.scale;
+        const left = img.x - img.displayWidth / 2;
+        const top = img.y - img.displayHeight / 2;
+        const bx = left + 300 * s;
+        const by = top + 65 * s;
+        const bw = (2050 - 300) * s;
+
+        const style = { font: "bold 14px monospace", fill: "#3a2030", wordWrap: { width: bw - 16 }, lineSpacing: 2 };
+        const full = levelData[this.levelId - 1].memoryText || "...";
+
+        // medimos el texto ya partido en líneas para que las palabras no salten de línea mientras se escribe
+        const probe = this.add.text(0, 0, full, style).setVisible(false);
+        const wrapped = probe.getWrappedText().join("\n");
+        probe.destroy();
+
+        const label = this.add.text(bx + 8, by + 6, "", style).setDepth(12);
+        this.typewrite(label, wrapped, 35);
+
+        // si das clicke salta la anim
+        this.input.on("pointerdown", () => {
+            if (this.typing && this.typing.getProgress() < 1) {
+                this.typing.remove();
+                label.setText(wrapped);
+            }
+        });
         // botón para terminar el nivel
         const bg = this.add.nineslice(400, 540, "buttons", 0, 80, 15, 5, 5, 5, 5).setScale(3).setDepth(12);
         this.add.text(400, 538, "BORRAR RECUERDO", { font: "bold 18px monospace", fill: "#f3e9e4" }).setOrigin(0.5).setDepth(13);
@@ -60,6 +87,15 @@ export default class BonusScene extends Phaser.Scene {
         bg.on("pointerout", () => bg.clearTint());
                 bg.on("pointerup", () => {
             this.scene.start("result", { win: true, levelId: this.levelId, enemiesKilled: this.enemiesKilled, candiesCollected: this.candiesCollected });
+        });
+    }
+
+    typewrite(label, text, speed = 35) {
+        let i = 0;
+        this.typing = this.time.addEvent({
+            delay: speed,
+            repeat: text.length - 1,
+            callback: () => label.setText(text.substring(0, ++i))
         });
     }
 }
