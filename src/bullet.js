@@ -6,6 +6,9 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite{
         this.scene.physics.add.existing(this);
         this.setScale(0.2);
         
+        this.startX = x;
+        this.startY = y;
+        this.maxRange = null; 
     }
 
     fire(targetX, targetY, speed = 600){
@@ -17,8 +20,15 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite{
     preUpdate(t, dt){
         super.preUpdate(t, dt);
 
-        let bounds = this.scene.scale;
+                let bounds = this.scene.scale;
         if (this.x < 0 || this.x > bounds.width || this.y < 0 || this.y > bounds.height){
+            this.destroy();
+            return;
+        }
+
+        // si tiene alcance máxomo desaparece 
+        if (this.maxRange !== null &&
+            Phaser.Math.Distance.Between(this.startX, this.startY, this.x, this.y) > this.maxRange){
             this.destroy();
         }
     }

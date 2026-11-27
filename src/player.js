@@ -9,6 +9,8 @@ const INVULNERABLE_TIME = 500;
 
 const IDLE = { down: 1, up: 4, left: 7, right: 10 }; // frame del medio de cada fila
 
+const SHOTGUN_RANGE = 250; 
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, "player", IDLE.down);
@@ -38,10 +40,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     shoot(targetX, targetY){
        if(!this.scene.playerBullets) return;
 
-       let offsets = this.powerUps.hasUpgrade("shotgun") ? SHOTGUN_ANGLES : [0];
+       let hasShotgun = this.powerUps.hasUpgrade("shotgun");
+       let offsets = hasShotgun ? SHOTGUN_ANGLES : [0];
        let center = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY));
        for (let offset of offsets){
         const bullet = new Bullet(this.scene, this.x, this.y);
+        if (hasShotgun) bullet.maxRange = SHOTGUN_RANGE;
         this.scene.playerBullets.add(bullet);
         bullet.setAngle(center + offset);
         this.scene.physics.velocityFromAngle(center + offset, BULLET_SPEED, bullet.body.velocity);
